@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Open it</title>
+
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: "Arial", sans-serif;
+      background: linear-gradient(135deg, #ffd6e7, #ff9fc5, #ffcce0);
+      overflow: hidden;
+    }
+
+    .container {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+    }
+
+    h1 {
+      color: #d63384;
+      font-size: 40px;
+      margin-bottom: 30px;
+      text-shadow: 2px 3px 8px rgba(214, 51, 132, 0.2);
+    }
+
+    button {
+      border: none;
+      padding: 18px 45px;
+      border-radius: 50px;
+      font-size: 24px;
+      font-weight: bold;
+      color: white;
+      background: linear-gradient(135deg, #ff4f9a, #ff79b5);
+      box-shadow: 0 8px 20px rgba(214, 51, 132, 0.3);
+      cursor: pointer;
+      transition: 0.25s;
+    }
+
+    button:hover {
+      transform: scale(1.08);
+      box-shadow: 0 12px 25px rgba(214, 51, 132, 0.4);
+    }
+
+    button:active {
+      transform: scale(0.95);
+    }
+
+    #again,
+    #result {
+      display: none;
+    }
+
+    #result {
+      font-size: 100px;
+      font-weight: 900;
+      color: #ff2f8b;
+      text-shadow:
+        3px 3px 0 white,
+        6px 6px 15px rgba(214, 51, 132, 0.3);
+      animation: pop 0.7s ease;
+    }
+
+    .heart {
+      position: absolute;
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 30px;
+      animation: float 5s linear infinite;
+    }
+
+    @keyframes pop {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      70% {
+        transform: scale(1.2);
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes float {
+      from {
+        transform: translateY(110vh) rotate(0deg);
+        opacity: 0;
+      }
+      20% {
+        opacity: 1;
+      }
+      to {
+        transform: translateY(-10vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- หัวใจลอย ๆ -->
+  <div class="heart" style="left:10%; animation-delay:0s;">♥</div>
+  <div class="heart" style="left:25%; animation-delay:1s;">♡</div>
+  <div class="heart" style="left:45%; animation-delay:2s;">♥</div>
+  <div class="heart" style="left:65%; animation-delay:0.5s;">♡</div>
+  <div class="heart" style="left:85%; animation-delay:1.5s;">♥</div>
+
+  <div class="container">
+
+    <!-- หน้าแรก -->
+    <div id="first">
+      <h1>Open it</h1>
+      <button onclick="openFirst()">เปิด</button>
+    </div>
+
+    <!-- หน้าที่สอง -->
+    <div id="again">
+      <h1>เปิดแล้วนะ</h1>
+      <button onclick="showResult()">กดอีกรอบ</button>
+    </div>
+
+    <!-- ผลลัพธ์ -->
+    <div id="result">
+      ตุ้ยย 😋😋
+    </div>
+
+  </div>
+
+  <script>
+    function openFirst() {
+      document.getElementById("first").style.display = "none";
+      document.getElementById("again").style.display = "block";
+    }
+
+    function showResult() {
+      document.getElementById("again").style.display = "none";
+      document.getElementById("result").style.display = "block";
+    }
+  </script>
+
+</body>
+</html>

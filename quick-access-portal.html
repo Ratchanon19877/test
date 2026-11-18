@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quick Access Portal</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #dceeff, #d9f4ef);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: #29445c;
+    transition: background 0.6s ease, color 0.4s ease;
+}
+
+.card {
+    background: rgba(255, 255, 255, 0.95);
+    width: 90%;
+    max-width: 420px;
+    padding: 35px 25px;
+    border-radius: 28px;
+    text-align: center;
+    box-shadow: 0 15px 40px rgba(82, 127, 155, 0.22);
+    animation: appear .5s;
+    position: relative;
+    transition: box-shadow 0.5s ease, color 0.4s ease;
+}
+
+@keyframes appear {
+    from { opacity: 0; transform: scale(.8); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+h1 { font-size: 27px; }
+p { line-height: 1.8; }
+
+button {
+    border: none;
+    padding: 13px 25px;
+    border-radius: 30px;
+    background: #287e91;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 8px;
+    transition: .2s;
+}
+
+button:hover {
+    transform: scale(1.08);
+    background: #1e6475;
+}
+
+input {
+    padding: 13px;
+    width: 85%;
+    border: 2px solid #93c5fd;
+    border-radius: 20px;
+    outline: none;
+    text-align: center;
+    font-size: 18px;
+    margin: 15px 0;
+    transition: border-color 0.2s;
+}
+
+input:focus {
+    border-color: #2563eb;
+}
+
+.small {
+    font-size: 13px;
+    color: #66879a;
+}
+
+/* ธีมหน้า 1: ฟ้า-เขียว (Portal Intro) */
+body.theme-1 {
+    background: linear-gradient(135deg, #dceeff, #d9f4ef);
+    color: #29445c;
+}
+body.theme-1 .card { box-shadow: 0 15px 40px rgba(82, 127, 155, 0.22); }
+body.theme-1 button { background: #287e91; }
+body.theme-1 button:hover { background: #1e6475; }
+
+/* ธีมหน้า 2: น้ำเงินเข้ม-คราม (Security Check) */
+body.theme-2 {
+    background: linear-gradient(135deg, #dbeafe, #e0e7ff);
+    color: #1e3a8a;
+}
+body.theme-2 .card { box-shadow: 0 15px 40px rgba(30, 58, 138, 0.18); }
+body.theme-2 button { background: #2563eb; }
+body.theme-2 button:hover { background: #1d4ed8; }
+
+/* ธีมหน้า 3: เขียวมิ้นท์-มรกต (Stage Passed) */
+body.theme-3 {
+    background: linear-gradient(135deg, #d1fae5, #dcfce7);
+    color: #14532d;
+}
+body.theme-3 .card { box-shadow: 0 15px 40px rgba(21, 128, 61, 0.18); }
+body.theme-3 button { background: #15803d; }
+body.theme-3 button:hover { background: #166534; }
+
+/* ธีมหน้า 4: ฟ้าสดใส-ไซอัน (Patience Test) */
+body.theme-4 {
+    background: linear-gradient(135deg, #e0f2fe, #bae6fd);
+    color: #0c4a6e;
+}
+body.theme-4 .card { box-shadow: 0 15px 40px rgba(2, 132, 199, 0.2); }
+body.theme-4 button { background: #0284c7; }
+body.theme-4 button:hover { background: #0369a1; }
+
+/* ธีมหน้า 5: น้ำเงิน-เทาอ่อน (System Alert & Reward) */
+body.theme-5 {
+    background: linear-gradient(135deg, #e0e7ff, #f1f5f9);
+    color: #1e293b;
+}
+body.theme-5 .card { box-shadow: 0 15px 40px rgba(51, 65, 85, 0.2); }
+body.theme-5 button { background: #4338ca; }
+body.theme-5 button:hover { background: #3730a3; }
+
+/* ธีมหน้า 6 ก่อนเปิดป๊อปอัพ: เทา-น้ำเงินสุขุม (ไม่ให้รู้ตัว) */
+body.theme-6 {
+    background: linear-gradient(135deg, #cbd5e1, #e2e8f0);
+    color: #1e293b;
+}
+body.theme-6 .card { box-shadow: 0 15px 40px rgba(30, 41, 59, 0.22); }
+body.theme-6 button { background: #334155; }
+body.theme-6 button:hover { background: #1e293b; }
+
+/* ธีมหน้าสุดท้ายตอนเปิดป๊อปอัพขอเป็นแฟน: สีชมพูหวาน */
+body.love-mode {
+    background: linear-gradient(135deg, #ffe1ec, #ffd1e6);
+    color: #713b72;
+}
+body.love-mode .card {
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 15px 40px rgba(183, 123, 166, 0.35);
+    color: #713b72;
+}
+body.love-mode .card button {
+    background: #ff77a9;
+}
+body.love-mode .card button:hover {
+    background: #fa5594;
+}
+
+.hidden { display: none; }
+
+#escapeBtn { position: relative; }
+
+.heart {
+    position: fixed;
+    top: -30px;
+    animation: fall 5s linear forwards;
+    pointer-events: none;
+    z-index: 20;
+}
+
+@keyframes fall {
+    to { transform: translateY(110vh) rotate(360deg); }
+}
+
+#popup, #lovePopup {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, .55);
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 100;
+    padding: 20px;
+}
+
+.popupBox {
+    background: white;
+    padding: 30px 20px;
+    border-radius: 25px;
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+    animation: appear .3s;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+}
+
+#popup .popupBox {
+    color: #1e293b;
+}
+
+#popup .popupBox button {
+    background: #2563eb;
+}
+
+#popup .popupBox button:hover {
+    background: #1d4ed8;
+}
+
+#lovePopup .popupBox {
+    background: #fff5f9;
+    border: 2px solid #ffc2d9;
+    color: #713b72;
+    box-shadow: 0 15px 40px rgba(255, 78, 145, 0.3);
+}
+
+#lovePopup .popupBox h1 {
+    color: #ff4e91;
+    font-size: 30px;
+}
+
+#lovePopup .small {
+    color: #bd8aaf;
+}
+
+#yesBtn {
+    background: #ff4e91;
+    font-size: 20px;
+    padding: 15px 35px;
+}
+
+#yesBtn:hover {
+    background: #f43f82;
+}
+
+#noBtn {
+    background: #999;
+}
+
+#noBtn:hover {
+    background: #777;
+}
+</style>
+</head>
+
+<body class="theme-1">
+
+<!-- PAGE 1 -->
+<div class="card" id="page1">
+    <h1>Quick Access Portal</h1>
+    <p>ระบบทดสอบการเข้าถึง</p>
+    <p>กรุณาทำตามขั้นตอนบนหน้าจอ</p>
+    <button onclick="nextPage(1)">เริ่มต้น</button>
+    <p class="small">ACCESS CHECK • VERSION 1.0</p>
+</div>
+
+<!-- PAGE 2 -->
+<div class="card hidden" id="page2">
+    <h1>🔐 Password Required</h1>
+    <p>กรุณากรอกรหัสผ่านเพื่อดำเนินการต่อ</p>
+    <input id="password" type="password" placeholder="Enter password">
+    <br>
+    <button onclick="checkPassword()">ยืนยัน</button>
+    <p id="error" style="color:#dc2626"></p>
+</div>
+
+<!-- PAGE 3 -->
+<div class="card hidden" id="page3">
+    <h1>เก่งมาก! 🎉</h1>
+    <p>ผ่านด่านแรกแล้วนะ</p>
+    <p>แต่ยังมีอะไรอีกนิดหน่อย...</p>
+    <button onclick="nextPage(3)">ต่อไป ➜</button>
+</div>
+
+<!-- PAGE 4 -->
+<div class="card hidden" id="page4">
+    <h1>ด่านทดสอบความอดทน 😂</h1>
+    <p>ลองกดปุ่มต่อไปให้ได้สิ</p>
+    <p id="counter">เหลืออีก 4 ครั้ง</p>
+    <button id="escapeBtn" onclick="escapeClick()">ต่อไป ➜</button>
+</div>
+
+<!-- PAGE 5 -->
+<div class="card hidden" id="page5">
+    <h1>Congratulations! 🥳</h1>
+    <p>เธอเก่งมาก ผ่านทุกด่านแล้ว</p>
+    <p>แต่เดี๋ยวก่อน...</p>
+    <button onclick="showPopup()">กดรับรางวัล 🎁</button>
+</div>
+
+<!-- PAGE 6 -->
+<div class="card hidden" id="page6">
+    <h1>เอาล่ะ... 👀</h1>
+    <p>เดินทางมาถึงตรงนี้แล้ว</p>
+    <p>พร้อมหรือยัง?</p>
+    <button onclick="openLovePopup()">พร้อมแล้ว!</button>
+</div>
+
+<!-- SYSTEM ALERT POPUP -->
+<div id="popup">
+    <div class="popupBox">
+        <h2>🚨 SYSTEM ALERT 🚨</h2>
+        <p>ตรวจพบคนน่ารักเกินค่าที่กำหนด</p>
+        <p>ระบบกำลังประมวลผล...</p>
+        <button onclick="closePopup()">โอเค 555</button>
+    </div>
+</div>
+
+<!-- FINAL POPUP -->
+<div id="lovePopup">
+    <div class="popupBox" id="lovePopupContent">
+        <h1>💗 มีอะไรจะถาม...</h1>
+        <p style="font-size:22px">เป็นแฟนกันไหม?</p>
+        <p>เรามีเรื่องอยากบอกเธอมานานแล้ว 🥺</p>
+        <button id="yesBtn" onclick="sayYes()">YES 💖</button>
+        <button id="noBtn" onclick="sayNo()">NO 🙃</button>
+        <p class="small">เลือกตามความรู้สึกได้เลยนะ 💗</p>
+    </div>
+</div>
+
+<script>
+let escapeCount = 0;
+let heartTimer = null;
+let noClickCount = 0;
+
+function setTheme(themeName) {
+    document.body.className = themeName;
+}
+
+function nextPage(page) {
+    const nextPageNum = page + 1;
+    const current = document.getElementById("page" + page);
+    const next = document.getElementById("page" + nextPageNum);
+
+    if (current && next) {
+        current.classList.add("hidden");
+        next.classList.remove("hidden");
+        setTheme("theme-" + nextPageNum);
+    }
+}
+
+function checkPassword() {
+    const pass = document.getElementById("password").value;
+
+    if (pass === "326777") {
+        nextPage(2);
+    } else {
+        document.getElementById("error").innerText =
+            "รหัสผิด! ลองใหม่อีกที 🤨";
+    }
+}
+
+function escapeClick() {
+    escapeCount++;
+
+    if (escapeCount <= 4) {
+        document.getElementById("counter").innerText =
+            "55555 ปุ่มหนีอีกแล้ว! เหลืออีก " +
+            (4 - escapeCount) + " ครั้ง";
+
+        const btn = document.getElementById("escapeBtn");
+        btn.style.position = "fixed";
+        btn.style.left = Math.max(5, Math.random() * 75) + "%";
+        btn.style.top = Math.max(10, Math.random() * 75) + "%";
+    } else {
+        document.getElementById("page4").classList.add("hidden");
+        document.getElementById("page5").classList.remove("hidden");
+        setTheme("theme-5");
+    }
+}
+
+function showPopup() {
+    document.getElementById("popup").style.display = "flex";
+}
+
+function closePopup() {
+    document.getElementById("popup").style.display = "none";
+    nextPage(5);
+}
+
+function openLovePopup() {
+    setTheme("love-mode");
+    document.getElementById("lovePopup").style.display = "flex";
+    startHearts();
+}
+
+function sayYes() {
+    document.getElementById("lovePopupContent").innerHTML = `
+        <h1>เย้!!!!!! 💖</h1>
+        <p style="font-size:25px">ตกลงแล้วนะ!! 🥹</p>
+        <p>ขอบคุณที่ให้โอกาสกันนะ</p>
+        <h1>💕 LOVE YOU 💕</h1>
+        <p>ตั้งแต่วันนี้ไปก็ขอฝากตัวด้วยนะ</p>
+        <button onclick="closeLovePopup()">ปิด 💗</button>
+    `;
+
+    startHearts();
+}
+
+function sayNo() {
+    noClickCount++;
+
+    const content = document.getElementById("lovePopupContent");
+
+    if (noClickCount === 1) {
+        content.innerHTML = `
+            <h1>เดี๋ยวก่อนนน 🥺</h1>
+            <p style="font-size:22px">คิดดี ๆ อีกทีได้ไหม?</p>
+            <p>ลองเลือกใหม่อีกครั้งก็ได้ 💗</p>
+            <button id="yesBtn" onclick="sayYes()">YES 💖</button>
+            <button id="noBtn" onclick="sayNo()">NO 🙃</button>
+        `;
+    } else {
+        content.innerHTML = `
+            <h1>โอเคค้าบบบ 😂</h1>
+            <p style="font-size:21px">ไม่สน...ก็ยังเคารพคำตอบอยู่ดี 💗</p>
+            <p>ขอบคุณที่เล่นจนจบนะ</p>
+            <button onclick="closeLovePopup()">ปิด</button>
+        `;
+    }
+}
+
+function closeLovePopup() {
+    document.getElementById("lovePopup").style.display = "none";
+}
+
+function startHearts() {
+    if (heartTimer !== null) return;
+
+    heartTimer = setInterval(() => {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "💗";
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.fontSize = (15 + Math.random() * 25) + "px";
+
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }, 350);
+}
+</script>
+
+</body>
+</html>
